@@ -1,4 +1,3 @@
-
 const quizData = [
 {
   pergunta: "Qual sua preferência de sabor?",
@@ -32,33 +31,32 @@ const quizData = [
   function startQuiz() {
     document.getElementById('quizContainer').style.display = 'block';
     currentQuestion = 0;
-    perfilContagem = { essencial: 0, premium: 0, sommelier: 0 };
+    perfilContagem = { essencial: 0, premium: 0, sommelier: 0 }; // Reiniciar contagem
     mostrarPergunta();
   }
 
   function mostrarPergunta() {
-    const q = quizData[currentQuestion];
-    document.getElementById('quizQuestion').innerText = q.pergunta;
-    const respostasDiv = document.getElementById('quizAnswers');
-    respostasDiv.innerHTML = '';
-
-    q.respostas.forEach(resp => {
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-outline-light m-2 w-100';
-      btn.innerText = resp.texto;
-      btn.onclick = function() { selecionarResposta(resp.perfil, btn);};
-      respostasDiv.appendChild(btn);
+    const perguntaAtual = quizData[currentQuestion];
+    document.getElementById('quizQuestion').innerText = perguntaAtual.pergunta;
+    const answersDiv = document.getElementById('quizAnswers');
+    answersDiv.innerHTML = '';
+    perguntaAtual.respostas.forEach((resposta, index) => {
+      const button = document.createElement('button');
+      button.innerText = resposta.texto;
+      button.classList.add('btn', 'btn-outline-danger', 'mb-2', 'w-100');
+      button.onclick = () => selecionarResposta(resposta.perfil, button);
+      answersDiv.appendChild(button);
     });
   }
 
-  function selecionarResposta(perfil, btnClicado) {
-    perfilContagem[perfil]++;
-    document.querySelectorAll('#quizAnswers button').forEach(btn => {btn.classList.remove('selected');
-    btn.disabled = true;
-  });
-
-  btnClicado.classList.add('selected');
- }
+  function selecionarResposta(perfilSelecionado, button) {
+    perfilContagem[perfilSelecionado]++;
+    // Remover a classe 'selected' de outros botões e adicionar ao atual
+    const buttons = document.querySelectorAll('#quizAnswers .btn');
+    buttons.forEach(btn => btn.classList.remove('selected')); // Remove de todos antes de adicionar ao clicado
+    buttons.forEach(btn => btn.disabled = true); // Desabilita todos os botões após a seleção para evitar múltiplas seleções
+    button.classList.add('selected');
+  }
 
   function nextQuestion() {
     if (currentQuestion < quizData.length - 1) {
@@ -84,7 +82,7 @@ const quizData = [
     document.getElementById('quizBox').innerHTML = `
       <h2>Resultado do seu Perfil:</h2>
       <p>${mensagem}</p>
-      <a href="planos.html" class="btn btn-danger mt-4">Ver planos recomendados</a>
+      <a href="${baseURL}#planos" class="btn btn-danger mt-4">Ver planos recomendados</a>
       <button class="btn btn-outline-light mt-2" onclick="fecharQuiz()">Fechar</button>
     `;
   }
@@ -94,14 +92,14 @@ const quizData = [
   }
 
 
-  //Seleção única no formulario
+  //Seleção única no formulario (mantenha como está)
+  function marcarUm(checkbox) {
+    var checkboxes = document.getElementsByName(checkbox.name);
+    checkboxes.forEach(function(currentCheckbox) {
+        if (currentCheckbox !== checkbox) {
+            currentCheckbox.checked = false;
+        }
+    });
+}
 
-  function marcarUm(checkbox){
-    var checkboxes = document.getElementsByName('infor');
-    for (var i = 0; i < checkboxes.length; i++){
-      if (checkboxes[i] !== checkbox){
-        checkboxes[i].checked = false;
-      }
 
-    }
-  }
